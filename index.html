@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="bn">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>আবিদ পোর্টাল</title>
+
+    <!-- Performance: Preconnect to external domains -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://script.google.com" />
+
+    <!-- Tailwind CSS -->
+    <!-- <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: "class", // Enables dark mode based on the .dark class
+        theme: {
+          extend: {
+            colors: {
+              primary: "var(--primary)",
+              primaryLight: "var(--primary-light)",
+              bgBody: "var(--bg-body)",
+              bgCard: "var(--bg-card)",
+              bgHover: "var(--bg-hover)",
+              textMain: "var(--text-main)",
+              textMuted: "var(--text-muted)",
+              borderLight: "var(--border-light)",
+              danger: "var(--danger)",
+            },
+            fontFamily: {
+              sans: ['"Anek Bangla"', '"Hind Siliguri"', "sans-serif"],
+            },
+            boxShadow: {
+              soft: "0 4px 20px rgba(0, 0, 0, 0.05)",
+              float: "0 10px 40px -10px var(--primary-light)",
+            },
+          },
+        },
+      };
+    </script> -->
+
+    <!-- Theme Initialization Script (Prevents FOUC) -->
+    <script src="./src/dependency.js"></script>
+
+    <!-- FontAwesome & Google Fonts -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@100..800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+
+  <body
+    class="bg-bgBody text-textMain font-sans antialiased selection:bg-primaryLight selection:text-primary transition-colors duration-300"
+  >
+    <!-- লগইন স্ক্রিন -->
+    <div
+      id="auth-screen"
+      class="fixed inset-0 z-[500] bg-gradient-to-br from-indigo-900 to-slate-900 flex items-center justify-center p-5"
+    >
+      <div
+        class="auth-card bg-bgCard/95 backdrop-blur-xl w-full max-w-sm p-8 rounded-[32px] text-center shadow-2xl border border-borderLight"
+      >
+        <div
+          class="w-16 h-16 bg-primaryLight text-primary rounded-2xl flex items-center justify-center text-3xl mx-auto mb-5 -rotate-6 shadow-float"
+        >
+          <i class="fas fa-bolt"></i>
+        </div>
+
+        <h2 class="text-2xl font-bold mb-6 text-textMain">
+          আবিদ সিকিউরিটি পোর্টাল
+        </h2>
+
+        <div class="flex gap-2 mb-6 bg-bgHover p-1.5 rounded-2xl">
+          <button
+            class="auth-tab active flex-1 py-3 border-none bg-transparent rounded-xl font-bold text-textMuted cursor-pointer transition-all duration-300"
+            onclick="switchAuth('login')"
+          >
+            লগ ইন
+          </button>
+          <button
+            class="auth-tab flex-1 py-3 border-none bg-transparent rounded-xl font-bold text-textMuted cursor-pointer transition-all duration-300"
+            onclick="switchAuth('signup')"
+          >
+            নতুন Account
+          </button>
+        </div>
+
+        <!-- Login form -->
+        <form id="loginForm" class="text-left space-y-4">
+          <div>
+            <label class="block font-semibold mb-2 text-sm text-textMain"
+              >নাম</label
+            >
+            <select
+              id="loginName"
+              required
+              class="w-full p-3.5 border-2 border-borderLight rounded-2xl outline-none font-sans transition-all duration-300 bg-bgHover focus:border-primary focus:bg-bgCard text-textMain focus:ring-4 focus:ring-primaryLight"
+            >
+              <option value="">নাম লোড হচ্ছে...</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-2 text-sm text-textMain"
+              >পাসওয়ার্ড</label
+            >
+            <input
+              type="password"
+              id="loginPassword"
+              placeholder="আপনার পাসওয়ার্ড দিন"
+              required
+              class="w-full p-3.5 border-2 border-borderLight rounded-2xl outline-none font-sans transition-all duration-300 bg-bgHover focus:border-primary focus:bg-bgCard text-textMain focus:ring-4 focus:ring-primaryLight"
+            />
+          </div>
+          <button
+            type="submit"
+            id="loginBtn"
+            class="w-full mt-2 p-4 bg-primary text-white border-none rounded-2xl font-bold cursor-pointer font-sans text-base transition-all duration-200 shadow-lg shadow-primary/30 active:scale-95"
+          >
+            লগইন করুন
+          </button>
+        </form>
+
+        <!-- Signup form -->
+        <form id="signupForm" style="display: none" class="text-left space-y-4">
+          <div>
+            <label class="block font-semibold mb-2 text-sm text-textMain"
+              >নাম নির্বাচন করুন</label
+            >
+            <select
+              id="signupName"
+              required
+              class="w-full p-3.5 border-2 border-borderLight rounded-2xl outline-none font-sans transition-all duration-300 bg-bgHover focus:border-primary focus:bg-bgCard text-textMain focus:ring-4 focus:ring-primaryLight"
+            >
+              <option value="">নাম লোড হচ্ছে...</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-2 text-sm text-textMain"
+              >পাসওয়ার্ড দিন</label
+            >
+            <input
+              type="password"
+              id="signupPassword"
+              placeholder="একটি নতুন পাসওয়ার্ড দিন"
+              required
+              class="w-full p-3.5 border-2 border-borderLight rounded-2xl outline-none font-sans transition-all duration-300 bg-bgHover focus:border-primary focus:bg-bgCard text-textMain focus:ring-4 focus:ring-primaryLight"
+            />
+          </div>
+          <button
+            type="submit"
+            id="signupBtn"
+            class="w-full mt-2 p-4 bg-primary text-white border-none rounded-2xl font-bold cursor-pointer font-sans text-base transition-all duration-200 shadow-lg shadow-primary/30 active:scale-95"
+          >
+            অ্যাকাউন্ট তৈরি করুন
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- অ্যাপ কন্টেন্ট -->
+    <div
+      id="app-content"
+      class="hidden pb-24 h-screen overflow-y-auto hide-scrollbar scroll-smooth"
+    >
+      <!-- Top Header -->
+      <header
+        class="bg-bgCard/80 backdrop-blur-lg p-4 sticky top-0 z-50 flex justify-between items-center border-b border-borderLight max-w-lg mx-auto"
+      >
+        <h3 id="view-title" class="text-xl font-bold text-textMain">হোম</h3>
+        <div class="flex gap-4 items-center">
+          <!-- Smart Refresh Button -->
+          <button
+            onclick="smartRefresh(true)"
+            id="refreshBtn"
+            class="text-textMuted hover:text-primary transition-colors cursor-pointer text-lg"
+          >
+            <i class="fas fa-sync-alt"></i>
+          </button>
+
+          <!-- Theme Toggle Button -->
+          <button
+            onclick="toggleTheme()"
+            class="text-textMuted hover:text-primary transition-colors cursor-pointer text-xl"
+          >
+            <i id="themeIcon" class="fas fa-moon"></i>
+          </button>
+
+          <div
+            class="w-10 h-10 rounded-full bg-primaryLight overflow-hidden cursor-pointer border-2 border-bgCard shadow-sm"
+          >
+            <img
+              id="headerAvatar"
+              src="https://api.dicebear.com/7.x/avataaars/svg?seed=User"
+              class="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      </header>
+
+      <main class="p-5 max-w-lg mx-auto">
+        <!-- HOME SECTION -->
+        <section id="home" class="view-section active">
+          <!-- Meal Card -->
+          <div
+            class="bg-bgCard rounded-[24px] p-6 mb-5 shadow-soft border border-borderLight transition-colors"
+          >
+            <h4 class="mb-4 text-textMain font-bold text-lg">
+              আপনার মিল নির্বাচন করুন
+            </h4>
+
+            <!-- Dynamic button classes handled by applyMealLockState -->
+            <button
+              id="mealSelectBtn"
+              class="w-full p-4 border-2 rounded-2xl font-bold text-base flex justify-between items-center transition-all duration-300 mb-4 bg-bgCard border-primaryLight text-primary cursor-pointer active:scale-95 active:bg-primaryLight"
+              onclick="openMealPopup()"
+            >
+              <span id="mealBtnText">মিল নির্বাচন করুন</span>
+              <i class="fas fa-chevron-circle-down text-xl"></i>
+            </button>
+
+            <div
+              id="meal-submission-result"
+              class="p-3.5 rounded-2xl bg-primaryLight text-primary font-bold text-center hidden mb-4"
+            ></div>
+
+            <div class="mt-5 pt-5 border-t border-borderLight">
+              <button
+                onclick="toggleOthersMeal()"
+                class="w-full p-3.5 bg-bgHover text-textMain border border-borderLight rounded-2xl font-bold cursor-pointer flex justify-between items-center transition-all duration-300 hover:brightness-95"
+              >
+                <span>আজকের মিল এন্ট্রি দেখুন</span>
+                <i
+                  class="fas fa-chevron-down text-textMuted transition-transform"
+                  id="others-meal-icon"
+                ></i>
+              </button>
+              <div
+                id="others-meal-list"
+                class="hidden mt-3 bg-bgCard rounded-2xl border border-borderLight p-4 shadow-sm"
+              >
+                <div class="text-center text-textMuted">
+                  <i class="fas fa-spinner fa-spin"></i> লোড হচ্ছে...
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Home Content Area -->
+          <div id="home-content">
+            <div class="text-center p-10">
+              <i
+                class="fas fa-circle-notch fa-spin text-3xl text-primary mb-4"
+              ></i>
+              <p class="text-textMuted font-medium">ডেটা লোড হচ্ছে...</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- MESSENGER SECTION -->
+        <section
+          id="messenger"
+          class="view-section relative h-[calc(100vh-160px)]"
+        >
+          <div
+            class="flex flex-col gap-4 py-2 pb-[100px] h-full overflow-y-auto hide-scrollbar"
+            id="chatBox"
+          >
+            <div class="text-center p-10 mt-10">
+              <i
+                class="fas fa-circle-notch fa-spin text-3xl text-primary mb-4"
+              ></i>
+              <p class="text-textMuted font-medium">মেসেজ লোড হচ্ছে...</p>
+            </div>
+          </div>
+
+          <div
+            class="fixed bottom-[85px] left-0 right-0 bg-gradient-to-t from-bgBody via-bgBody to-transparent p-3 pointer-events-none flex justify-center z-10 transition-colors"
+          >
+            <div
+              class="max-w-lg w-full flex gap-2 bg-bgCard/90 backdrop-blur-md p-2 rounded-full shadow-lg pointer-events-auto border border-borderLight items-center"
+            >
+              <input
+                type="text"
+                id="chatInput"
+                placeholder="আপনার বার্তা লিখুন..."
+                class="flex-1 py-3 px-5 rounded-full border-none bg-transparent outline-none font-sans text-sm text-textMain"
+                onkeypress="if (event.key === 'Enter') sendMsg();"
+              />
+              <button
+                class="w-11 h-11 rounded-full bg-primary text-white border-none flex items-center justify-center cursor-pointer transition-all duration-200 active:scale-90 shadow-md shrink-0"
+                id="sendMsgBtn"
+                onclick="sendMsg()"
+              >
+                <i class="fas fa-paper-plane"></i>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- REPORT SECTION -->
+        <section id="report" class="view-section">
+          <div id="report-content">
+            <div class="text-center p-10">
+              <i
+                class="fas fa-circle-notch fa-spin text-3xl text-primary mb-4"
+              ></i>
+              <p class="text-textMuted font-medium">ডেটা লোড হচ্ছে...</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- NOTIFICATION SECTION -->
+        <section id="notification" class="view-section">
+          <div class="flex justify-between items-center mb-5 px-1">
+            <span id="notif-count" class="font-bold text-lg text-textMain"
+              >নতুন নোটিফিকেশন</span
+            >
+            <button
+              onclick="clearNotif()"
+              class="text-danger bg-danger/10 hover:bg-danger/20 px-4 py-2 rounded-xl border-none font-bold cursor-pointer text-sm transition-all duration-200"
+            >
+              সব পঠিত করুন
+            </button>
+          </div>
+          <div id="notif-box" class="space-y-3"></div>
+        </section>
+
+        <!-- ACCOUNT SECTION -->
+        <section id="account" class="view-section">
+          <div
+            class="bg-bgCard rounded-[32px] p-10 flex flex-col items-center text-center shadow-soft border border-borderLight max-w-sm mx-auto mt-6 transition-colors"
+          >
+            <div class="relative inline-block mb-4">
+              <img
+                id="profileAvatar"
+                src="https://api.dicebear.com/7.x/avataaars/svg?seed=User"
+                class="w-24 h-24 rounded-full bg-primaryLight shadow-lg border-4 border-bgCard object-cover"
+              />
+            </div>
+            <h3 id="profileName" class="text-2xl font-bold text-textMain mb-1">
+              ইউজার
+            </h3>
+            <p
+              id="profileFingerprint"
+              class="text-textMuted text-sm font-medium mb-8 bg-bgHover px-4 py-1.5 rounded-full border border-borderLight"
+            >
+              Fingerprint:
+            </p>
+            <button
+              class="w-full py-4 bg-red-50 text-danger font-bold rounded-2xl active:scale-95 transition-all duration-200"
+              onclick="logout()"
+            >
+              লগ আউট
+            </button>
+          </div>
+        </section>
+      </main>
+
+      <!-- Bottom Navigation -->
+      <nav
+        class="bottom-nav fixed bottom-0 left-0 right-0 bg-bgCard/95 backdrop-blur-xl h-[80px] grid grid-cols-5 items-center border-t border-borderLight z-[200] pb-[env(safe-area-inset-bottom)] max-w-lg mx-auto transition-colors"
+      >
+        <button
+          class="nav-item active flex flex-col items-center gap-1 bg-none border-none text-textMuted font-semibold text-[11px] cursor-pointer"
+          onclick="navTo('home')"
+        >
+          <div
+            class="nav-icon-wrap py-1.5 px-4 rounded-full transition-all duration-300 flex items-center justify-center relative"
+          >
+            <i class="fas fa-home text-xl"></i>
+          </div>
+          <span>হোম</span>
+        </button>
+        <button
+          class="nav-item flex flex-col items-center gap-1 bg-none border-none text-textMuted font-semibold text-[11px] cursor-pointer"
+          onclick="navTo('messenger')"
+        >
+          <div
+            class="nav-icon-wrap py-1.5 px-4 rounded-full transition-all duration-300 flex items-center justify-center relative"
+          >
+            <i class="fas fa-comment-dots text-xl"></i>
+          </div>
+          <span>মেসেজ</span>
+        </button>
+        <button
+          class="nav-item flex flex-col items-center gap-1 bg-none border-none text-textMuted font-semibold text-[11px] cursor-pointer"
+          onclick="navTo('report')"
+        >
+          <div
+            class="nav-icon-wrap py-1.5 px-4 rounded-full transition-all duration-300 flex items-center justify-center relative"
+          >
+            <i class="fas fa-chart-pie text-xl"></i>
+          </div>
+          <span>রিপোর্ট</span>
+        </button>
+        <button
+          class="nav-item flex flex-col items-center gap-1 bg-none border-none text-textMuted font-semibold text-[11px] cursor-pointer"
+          onclick="navTo('notification')"
+        >
+          <div
+            class="nav-icon-wrap py-1.5 px-4 rounded-full transition-all duration-300 flex items-center justify-center relative"
+          >
+            <i class="fas fa-bell text-xl"></i>
+            <span
+              class="absolute top-0 right-0 bg-danger text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-bgCard min-w-[18px] text-center transform translate-x-1/4 -translate-y-1/4 shadow-sm"
+              id="nav-notif-badge"
+              style="display: none"
+              >0</span
+            >
+          </div>
+          <span>নোটিফিকেশন</span>
+        </button>
+        <button
+          class="nav-item flex flex-col items-center gap-1 bg-none border-none text-textMuted font-semibold text-[11px] cursor-pointer"
+          onclick="navTo('account')"
+        >
+          <div
+            class="nav-icon-wrap py-1.5 px-4 rounded-full transition-all duration-300 flex items-center justify-center relative"
+          >
+            <i class="fas fa-user text-xl"></i>
+          </div>
+          <span>প্রোফাইল</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Meal Selection Modal -->
+    <div
+      id="mealSelectionModal"
+      class="modal fixed inset-0 bg-slate-900/60 backdrop-blur-sm items-center justify-center z-[1000] p-5 hidden"
+      onclick="closeMealPopup()"
+    >
+      <div
+        class="modal-content bg-bgCard rounded-[32px] w-full max-w-sm overflow-hidden shadow-2xl border border-borderLight transition-colors"
+        onclick="event.stopPropagation()"
+      >
+        <div class="bg-primary p-6 text-center text-white">
+          <h3 class="m-0 text-xl font-bold">আপনার মিল বেছে নিন</h3>
+        </div>
+        <div class="flex flex-col gap-2 p-5" id="popupMealOptions">
+          <button
+            class="popup-item p-4 text-left bg-bgHover border-2 border-transparent rounded-2xl text-base font-bold text-textMain cursor-pointer transition-all duration-200 flex justify-between items-center active:scale-95"
+            data-val="2.5"
+            onclick="highlightMeal(this, '2.5', '২.৫ মিল')"
+          >
+            <span>২.৫ মিল</span>
+            <i class="fas fa-check-circle hidden text-xl"></i>
+          </button>
+          <button
+            class="popup-item p-4 text-left bg-bgHover border-2 border-transparent rounded-2xl text-base font-bold text-textMain cursor-pointer transition-all duration-200 flex justify-between items-center active:scale-95"
+            data-val="1.5 N"
+            onclick="highlightMeal(this, '1.5 N', '১.৫ রাত')"
+          >
+            <span>১.৫ রাত</span>
+            <i class="fas fa-check-circle hidden text-xl"></i>
+          </button>
+          <button
+            class="popup-item p-4 text-left bg-bgHover border-2 border-transparent rounded-2xl text-base font-bold text-textMain cursor-pointer transition-all duration-200 flex justify-between items-center active:scale-95"
+            data-val="1.5 D"
+            onclick="highlightMeal(this, '1.5 D', '১.৫ দুপুর')"
+          >
+            <span>১.৫ দুপুর</span>
+            <i class="fas fa-check-circle hidden text-xl"></i>
+          </button>
+          <button
+            class="popup-item p-4 text-left bg-bgHover border-2 border-transparent rounded-2xl text-base font-bold text-textMain cursor-pointer transition-all duration-200 flex justify-between items-center active:scale-95"
+            data-val="5 FF"
+            onclick="highlightMeal(this, '5 FF', '৫ (গেস্ট)')"
+          >
+            <span>৫ (গেস্ট)</span>
+            <i class="fas fa-check-circle hidden text-xl"></i>
+          </button>
+        </div>
+        <div class="p-5 pt-0 flex gap-3 bg-bgCard">
+          <button
+            class="flex-1 p-4 bg-bgHover text-textMain font-bold rounded-2xl active:brightness-95 transition-colors border border-borderLight"
+            onclick="closeMealPopup()"
+          >
+            বাতিল
+          </button>
+          <button
+            class="flex-[2] p-4 bg-primary text-white font-bold rounded-2xl shadow-lg shadow-primary/30 active:scale-95 transition-transform"
+            onclick="confirmMealSelection()"
+          >
+            সাবমিট করুন
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scripts Core Logic & New Features  -->
+    <script src="./src/main.js"></script>
+  </body>
+</html>
